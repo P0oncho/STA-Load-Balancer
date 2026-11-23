@@ -27,21 +27,26 @@ export default class RoundRobin {
     // }
     let server = this.servers[0];
 
-    if (this.next <= 3) {
-      server = this.servers[0];
-    } else if (this.next <= 6) {
-      server = this.servers[1];
-    } else if (this.next <= 8) {
-      server = this.servers[2];
-    } else {
-      server = this.servers[3];
-    }
+    // Un número grande random para poder comparar
+    let menos = 999;
 
-    // Paso al siguiente turno y vuelvo al principio al llegar a 10
-    this.next = this.next + 1;
+    // Miro los servidores uno por uno
+    for (let i = 0; i < this.servers.length; i++) {
+      const actual = this.servers[i];
 
-    if (this.next > 9) {
-      this.next = 0;
+      // Cuento las peticiones que tiene encima:
+      // las de la cola y una más si está procesando
+      let conexiones = actual.queuedRequests.length;
+
+      if (actual.activeRequest != null) {
+        conexiones = conexiones + 1;
+      }
+
+      // Si tiene menos que el mejor que llevaba, se queda con él
+      if (conexiones < menos) {
+        menos = conexiones;
+        server = actual;
+      }
     }
 
     // Envía la petición al servidor y devuelve su respuesta al cliente.
