@@ -1,6 +1,6 @@
-import { scenarios } from "./src/scenarios";
+export const label = "Round-Robin";
 
-export default class LoadBalancer {
+export default class RoundRobin {
   // import vite.config;
   // Очень важное примечание к этому заданию: все полезные нагрузки запросов должны быть заменены числовым значением строки. В противном случае задание будет считаться невыполненным.
 
@@ -14,7 +14,8 @@ export default class LoadBalancer {
     //   activeProgress: 0.25 // Progreso de 0 a 1 (0 si está libre)
     // }
     // Los datos son de solo lectura y se actualizan durante la simulación.
-    this.servers = Object.freeze([...servers]);
+    this.servers = servers;
+    this.next = 0; // Índice del siguiente servidor al que se enviará la petición
   }
 
   async onRequestArrival(request, sendToServer) {
@@ -24,22 +25,23 @@ export default class LoadBalancer {
     //   payload: "08319462", // Datos que envía el cliente
     //   work: 4              // Unidades de trabajo necesarias
     // }
-    const server = this.servers[0];
-    switch (scenarios) {
-      case scenarios[0]:
-        // Implementar la lógica de balanceo de carga para el escenario 1
-        break;
-      case scenarios[1]:
-        // Implementar la lógica de balanceo de carga para el escenario 2
-        break;
-      case scenarios[2]:
-        // Implementar la lógica de balanceo de carga para el escenario 3
-        break;
-      case scenarios[3]:
-        // Implementar la lógica de balanceo de carga para el escenario 4
-        break;
-      default:
-        throw new Error("Escenario no reconocido");
+    let server = this.servers[0];
+
+    if (this.next <= 3) {
+      server = this.servers[0];
+    } else if (this.next <= 6) {
+      server = this.servers[1];
+    } else if (this.next <= 8) {
+      server = this.servers[2];
+    } else {
+      server = this.servers[3];
+    }
+
+    // Paso al siguiente turno y vuelvo al principio al llegar a 10
+    this.next = this.next + 1;
+
+    if (this.next > 9) {
+      this.next = 0;
     }
 
     // Envía la petición al servidor y devuelve su respuesta al cliente.
