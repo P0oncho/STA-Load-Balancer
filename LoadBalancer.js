@@ -1,3 +1,5 @@
+import { scenarios } from "./src/scenarios";
+
 export default class LoadBalancer {
   // import vite.config;
   // Очень важное примечание к этому заданию: все полезные нагрузки запросов должны быть заменены числовым значением строки. В противном случае задание будет считаться невыполненным.
@@ -23,6 +25,22 @@ export default class LoadBalancer {
     //   work: 4              // Unidades de trabajo necesarias
     // }
     const server = this.servers[0];
+    switch (scenarios) {
+      case scenarios[0]:
+        // Implementar la lógica de balanceo de carga para el escenario 1
+        break;
+      case scenarios[1]:
+        // Implementar la lógica de balanceo de carga para el escenario 2
+        break;
+      case scenarios[2]:
+        // Implementar la lógica de balanceo de carga para el escenario 3
+        break;
+      case scenarios[3]:
+        // Implementar la lógica de balanceo de carga para el escenario 4
+        break;
+      default:
+        throw new Error("Escenario no reconocido");
+    }
 
     // Envía la petición al servidor y devuelve su respuesta al cliente.
     return sendToServer(server.id);
